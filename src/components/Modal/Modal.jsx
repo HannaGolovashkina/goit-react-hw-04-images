@@ -1,45 +1,41 @@
 import PropTypes from 'prop-types';
-import { Component } from 'react';
+import App from 'components/App';
+import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { BsXLg } from 'react-icons/bs';
 import css from './Modal.module.css';
 
 const modalRoot = document.querySelector('#modal-root');
 
-class Modal extends Component {
-  static propTypes = {
-    title: PropTypes.string,
-    onClose: PropTypes.func.isRequired,
-    currentImageUrl: PropTypes.string,
-    currentImageDescription: PropTypes.string,
-  };
+const Modal = ({ onClose, title, children }) => {
+  useEffect(() => {
+    const handleKeyDown = e => {
+      if (e.code === 'Escape') {
+        onClose();
+      }
+    };
 
-  componentDidMount() {
-    window.addEventListener('keydown', this.handleKeyDown);
-  }
+    window.addEventListener('keydown', handleKeyDown);
 
-  componentWillUnmount() {
-    window.removeEventListener('keydown', this.handleKeyDown);
-  }
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
 
-  handleClickBackdrop = e => {
+  // static propTypes = {
+  //   title: PropTypes.string,
+  //   onClose: PropTypes.func.isRequired,
+  //   currentImageUrl: PropTypes.string,
+  //   currentImageDescription: PropTypes.string,
+  // };
+
+
+  const handleClickBackdrop = e => {
     if (e.target === e.currentTarget) {
-      this.props.onClose();
+      onClose();
     }
   };
 
-  handleKeyDown = e => {
-    if (e.code === 'Escape') {
-      this.props.onClose();
-    }
-  };
-
-  render() {
-    const { title, onClose, currentImageUrl, currentImageDescription } =
-      this.props;
-
-    return createPortal(
-      <div className={css.backdrop} onClick={this.handleClickBackdrop}>
+  return createPortal(
+      <div className={css.backdrop} onClick={handleClickBackdrop}>
         <div className={css.modal}>
           <div className={css.wrapper}>
             {title && <h1 className={css.title}>{title}</h1>}
@@ -48,8 +44,8 @@ class Modal extends Component {
             </button>
           </div>
           <img
-            src={currentImageUrl}
-            alt={currentImageDescription}
+            // src={url}
+            // alt={title}
             loading="lazy"
           />
         </div>
@@ -57,6 +53,5 @@ class Modal extends Component {
       modalRoot
     );
   }
-}
 
 export default Modal;
