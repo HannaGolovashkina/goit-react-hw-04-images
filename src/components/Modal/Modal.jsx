@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import App from 'components/App';
+// import App from 'components/App';
 import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { BsXLg } from 'react-icons/bs';
@@ -7,7 +7,7 @@ import css from './Modal.module.css';
 
 const modalRoot = document.querySelector('#modal-root');
 
-const Modal = ({ onClose, title, children }) => {
+const Modal = ({ onClose, title, url  }) => {
   useEffect(() => {
     const handleKeyDown = e => {
       if (e.code === 'Escape') {
@@ -44,8 +44,8 @@ const Modal = ({ onClose, title, children }) => {
             </button>
           </div>
           <img
-            // src={url}
-            // alt={title}
+            src={url}
+            alt={title}
             loading="lazy"
           />
         </div>
@@ -55,3 +55,10 @@ const Modal = ({ onClose, title, children }) => {
   }
 
 export default Modal;
+
+Modal.propTypes = {
+  title: PropTypes.string,
+  url: PropTypes.string.isRequired,
+  onClose: PropTypes.func.isRequired,
+  alt: PropTypes.string,
+};
